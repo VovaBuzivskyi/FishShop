@@ -12,8 +12,35 @@ public class FishDto {
 	private String name;
 	@Min(0)
 	private double price;
-	private MultipartFile imageFile;
-	
+
+	private MultipartFile firstImageFile;
+	private MultipartFile secondImageFile;
+	private MultipartFile thirdImageFile;
+
+	public MultipartFile getThirdImageFile() {
+		return thirdImageFile;
+	}
+
+	public void setThirdImageFile(MultipartFile thirdImageFile) {
+		this.thirdImageFile = thirdImageFile;
+	}
+
+	public MultipartFile getSecondImageFile() {
+		return secondImageFile;
+	}
+
+	public void setSecondImageFile(MultipartFile secondImageFile) {
+		this.secondImageFile = secondImageFile;
+	}
+
+	public MultipartFile getFirstImageFile() {
+		return firstImageFile;
+	}
+
+	public void setFirstImageFile(MultipartFile firstImageFile) {
+		this.firstImageFile = firstImageFile;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -26,11 +53,4 @@ public class FishDto {
 	public void setPrice(double price) {
 		this.price = price;
 	}
-	public MultipartFile getImageFile() {
-		return imageFile;
-	}
-	public void setImageFile(MultipartFile imageFile) {
-		this.imageFile = imageFile;
-	}
-
 }

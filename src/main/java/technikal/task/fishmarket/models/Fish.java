@@ -18,8 +18,35 @@ public class Fish {
 	private String name;
 	private double price;
 	private Date catchDate;
-	private String imageFileName;
-	
+
+	private String firstImageFileName;
+	private String secondImageFileName;
+	private String thirdImageFileName;
+
+	public String getFirstImageFileName() {
+		return firstImageFileName;
+	}
+
+	public void setFirstImageFileName(String imageFileName) {
+		this.firstImageFileName = imageFileName;
+	}
+
+	public String getSecondImageFileName() {
+		return secondImageFileName;
+	}
+
+	public void setSecondImageFileName(String secondImageFileName) {
+		this.secondImageFileName = secondImageFileName;
+	}
+
+	public String getThirdImageFileName() {
+		return thirdImageFileName;
+	}
+
+	public void setThirdImageFileName(String thirdImageFileName) {
+		this.thirdImageFileName = thirdImageFileName;
+	}
+
 	public int getId() {
 		return id;
 	}
@@ -43,12 +70,6 @@ public class Fish {
 	}
 	public void setCatchDate(Date catchDate) {
 		this.catchDate = catchDate;
-	}
-	public String getImageFileName() {
-		return imageFileName;
-	}
-	public void setImageFileName(String imageFileName) {
-		this.imageFileName = imageFileName;
 	}
 
 }
