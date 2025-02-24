@@ -3,6 +3,8 @@ package technikal.task.fishmarket.controllers;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,6 +36,7 @@ import java.util.stream.Stream;
 @RequestMapping("/fish")
 public class FishController {
 
+    private static final Logger log = LoggerFactory.getLogger(FishController.class);
     private final FishRepository repo;
 
     public FishController(FishRepository repo) {
@@ -44,6 +47,8 @@ public class FishController {
     public String showFishList(Model model) {
         List<Fish> fishlist = repo.findAll(Sort.by(Sort.Direction.DESC, "id"));
         model.addAttribute("fishlist", fishlist);
+
+        log.info("{} Fishes was get from fish repository", fishlist.size());
         return "index";
     }
 
@@ -77,6 +82,7 @@ public class FishController {
         });
 
         repo.delete(fish);
+        log.info("Fish with id {} was deleted", fish.getId());
 
         return "redirect:/fish";
     }
@@ -143,6 +149,7 @@ public class FishController {
         fish.setName(fishDto.getName());
         fish.setPrice(fishDto.getPrice());
         repo.save(fish);
+        log.info("Fish with id {} was created", fish.getId());
 
         return "redirect:/fish";
     }

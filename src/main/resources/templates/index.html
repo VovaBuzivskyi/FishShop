@@ -14,7 +14,7 @@
 
         .image-container img {
             transition: transform 0.3s ease;
-            width: 100px;
+            width: 90px;
         }
 
         .image-container:hover img {
@@ -47,32 +47,31 @@
             <td th:text="${fish.name}"></td>
             <td th:text="${fish.price} + '₴'"></td>
             <td th:text="${fish.catchDate.toString().substring(0,10)}"></td>
-            <td>
-                <div class="row align-items-center flex-nowrap">
-                    <div class="col-4" th:if="${fish.firstImageFileName != null and fish.firstImageFileName != ''}">
-                        <div class="image-container">
+            <td class="text-end">
+                <div class="d-flex align-items-center justify-content-between" style="gap: 20px; width: 100%;">
+                    <div class="d-flex justify-content-start" style="gap: 20px; flex-grow: 1;">
+                        <div class="image-container text-center" th:if="${fish.firstImageFileName != null and fish.firstImageFileName != ''}">
                             <img th:src="@{'/images/'+${fish.firstImageFileName}}" alt="..." width="90">
                         </div>
-                    </div>
-                    <div class="col-4" th:if="${fish.secondImageFileName != null and fish.secondImageFileName != ''}">
-                        <div class="image-container">
+                        <div class="image-container text-center" th:if="${fish.secondImageFileName != null and fish.secondImageFileName != ''}">
                             <img th:src="@{'/images/'+${fish.secondImageFileName}}" alt="..." width="90">
                         </div>
-                    </div>
-                    <div class="col-4" th:if="${fish.thirdImageFileName != null and fish.thirdImageFileName != ''}">
-                        <div class="image-container">
-                            <img th:src="@{'/images/'+${fish.thirdImageFileName}}" alt="..." width="9">
+                        <div class="image-container text-center" th:if="${fish.thirdImageFileName != null and fish.thirdImageFileName != ''}">
+                            <img th:src="@{'/images/'+${fish.thirdImageFileName}}" alt="..." width="90">
                         </div>
                     </div>
-                    <div class="col-auto">
+                    <div>
                         <a class="btn btn-success btn-sm" th:href="@{/fish/delete(id=${fish.id})}"
                            onclick="return confirm('Ви впевнені?')">Прибрати</a>
                     </div>
                 </div>
             </td>
+        </tbody>
+    </table>
+</div>
 
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-                    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-                    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
 </body>
 </html>
