@@ -2,35 +2,57 @@ package technikal.task.fishmarket.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
-import static org.springframework.security.config.Customizer.withDefaults;
+import technikal.task.fishmarket.services.CustomUserDetailService;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-//    @Bean
-//    public UserDetailsService userDetailsService() {
-//        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-//        manager.createUser(User.withUsername("user").password("{noop}password").roles("USER").build());
-//        manager.createUser(User.withUsername("admin").password("{noop}admin").roles("ADMIN").build());
-//        return manager;
-//    }
+    private final CustomUserDetailService userDetailsService;
+
+    public SecurityConfig(CustomUserDetailService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/fish/**").permitAll() // Открываем публичный доступ
-                        .anyRequest().authenticated() // Всё остальное требует входа
+                        .requestMatchers("/", "/register", "/login", "/css/**", "/js/**", "/images/**").permitAll() // Доступ к публичным страницам
+                        .requestMatchers("/fish/**").permitAll() // Разрешаем доступ к странице с рыбой
+                        .anyRequest().authenticated() // Остальные страницы требуют входа
                 )
-                .csrf(csrf -> csrf.disable()) // Временно отключаем CSRF-защиту (небезопасно!)
-                .formLogin(withDefaults()) // Форма входа
-                .logout(withDefaults()); // Выход
+                .csrf(csrf -> csrf.disable()) // Отключаем CSRF (на тестах)
+                .formLogin(login -> login
+                        .defaultSuccessUrl("/fish/", true)
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout") // URL выхода
+                        .logoutSuccessUrl("/") // После выхода → главная
+                        .permitAll()
+                );
 
         return http.build();
+    }
+
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(userDetailsService);
+        provider.setPasswordEncoder(passwordEncoder());
+        return provider;
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }

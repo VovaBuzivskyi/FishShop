@@ -24,7 +24,16 @@
         }
     </style>
 </head>
-<body>
+<body><div class="container d-flex justify-content-end my-3">
+    <div>
+        <a class="btn btn-primary me-2" href="/register">Реєстрація</a>
+        <a class="btn btn-secondary me-2" href="/login">Увійти</a>
+
+        <form th:action="@{/logout}" method="post" style="display: inline;">
+            <button type="submit" class="btn btn-danger">Вийти</button>
+        </form>
+    </div>
+</div>
 <div class="container">
     <h1 class="text-center my-4">Рибка на продаж</h1>
 
@@ -62,7 +71,7 @@
                     </div>
                     <div>
                         <a class="btn btn-success btn-sm" th:href="@{/fish/delete(id=${fish.id})}"
-                           onclick="return confirm('Ви впевнені?')">Прибрати</a>
+                           onclick="return confirm('Ви впевнені?')">Придбати</a>
                     </div>
                 </div>
             </td>
