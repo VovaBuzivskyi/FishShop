@@ -123,6 +123,7 @@ public class FishController {
                         try (InputStream inputStream = multipartFile.getInputStream()) {
                             Files.copy(inputStream, Paths.get(uploadDir + storageFileName), StandardCopyOption.REPLACE_EXISTING);
                             fileNames.add(storageFileName);
+                            log.info("File with name {} was added to local storage", storageFileName);
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
