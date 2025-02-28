@@ -1,4 +1,4 @@
-package technikal.task.fishmarket.models;
+package technikal.task.fishmarket.dtos;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;

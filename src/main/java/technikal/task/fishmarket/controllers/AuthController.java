@@ -5,7 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import technikal.task.fishmarket.models.UserEntity;
+import technikal.task.fishmarket.models.User;
 import technikal.task.fishmarket.services.UserService;
 
 @Controller
@@ -19,13 +19,13 @@ public class AuthController {
 
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
-        model.addAttribute("user", new UserEntity());
+        model.addAttribute("user", new User());
         return "register";
     }
 
     @PostMapping("/register")
-    public String processRegistration(@ModelAttribute UserEntity user) {
+    public String processRegistration(@ModelAttribute User user) {
         userService.registerUser(user);
-        return "redirect:/login"; // ✅ После регистрации → на страницу входа
+        return "redirect:/login";
     }
 }

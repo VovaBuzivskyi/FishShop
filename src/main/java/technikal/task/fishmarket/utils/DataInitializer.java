@@ -1,13 +1,15 @@
-package technikal.task.fishmarket.services;
+package technikal.task.fishmarket.utils;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import technikal.task.fishmarket.models.RoleEntity;
-import technikal.task.fishmarket.models.UserEntity;
+import technikal.task.fishmarket.enums.UserRoleName;
+import technikal.task.fishmarket.models.User;
+import technikal.task.fishmarket.models.UserRole;
 import technikal.task.fishmarket.repositories.RoleRepository;
 import technikal.task.fishmarket.repositories.UserRepository;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Component
@@ -26,24 +28,24 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) {
         if (userRepository.count() == 0) {
-            RoleEntity userRole = new RoleEntity();
-            userRole.setName("USER");
+            UserRole userRole = new UserRole();
+            userRole.setRoleName(UserRoleName.USER);
             roleRepository.save(userRole);
 
-            RoleEntity adminRole = new RoleEntity();
-            adminRole.setName("ADMIN");
+            UserRole adminRole = new UserRole();
+            adminRole.setRoleName(UserRoleName.ADMIN);
             roleRepository.save(adminRole);
 
-            UserEntity user = new UserEntity();
+            User user = new User();
             user.setUsername("user");
             user.setPassword(passwordEncoder.encode("user"));
-            user.setRoles(Set.of(userRole));
+            user.setRoles(new HashSet<>(Set.of(userRole)));
             userRepository.save(user);
 
-            UserEntity admin = new UserEntity();
+            User admin = new User();
             admin.setUsername("admin");
             admin.setPassword(passwordEncoder.encode("admin"));
-            admin.setRoles(Set.of(adminRole));
+            admin.setRoles(new HashSet<>(Set.of(adminRole)));
             userRepository.save(admin);
         }
     }

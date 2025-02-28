@@ -7,5 +7,4 @@ import technikal.task.fishmarket.models.Fish;
 
 @Repository
 public interface FishRepository extends JpaRepository<Fish, Integer> {
-
 }

@@ -1,4 +1,4 @@
-package technikal.task.fishmarket.config.security;
+package technikal.task.fishmarket.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -6,8 +6,6 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import technikal.task.fishmarket.services.CustomUserDetailService;
 
@@ -16,9 +14,11 @@ import technikal.task.fishmarket.services.CustomUserDetailService;
 public class SecurityConfig {
 
     private final CustomUserDetailService userDetailsService;
+    private final EncoderConfig encoderConfig;
 
-    public SecurityConfig(CustomUserDetailService userDetailsService) {
+    public SecurityConfig(CustomUserDetailService userDetailsService, EncoderConfig encoderConfig) {
         this.userDetailsService = userDetailsService;
+        this.encoderConfig = encoderConfig;
     }
 
     @Bean
@@ -26,7 +26,8 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/", "/register", "/login", "/css/**", "/js/**", "/images/**").permitAll() // Доступ к публичным страницам
-                        .requestMatchers("/fish/**").permitAll() // Разрешаем доступ к странице с рыбой
+                        .requestMatchers("/fish/create").hasRole("ADMIN")
+                        .requestMatchers("/fish").hasRole("USER")
                         .anyRequest().authenticated() // Остальные страницы требуют входа
                 )
                 .csrf(csrf -> csrf.disable()) // Отключаем CSRF (на тестах)
@@ -35,8 +36,8 @@ public class SecurityConfig {
                         .permitAll()
                 )
                 .logout(logout -> logout
-                        .logoutUrl("/logout") // URL выхода
-                        .logoutSuccessUrl("/") // После выхода → главная
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/")
                         .permitAll()
                 );
 
@@ -47,12 +48,7 @@ public class SecurityConfig {
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userDetailsService);
-        provider.setPasswordEncoder(passwordEncoder());
+        provider.setPasswordEncoder(encoderConfig.passwordEncoder());
         return provider;
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 }

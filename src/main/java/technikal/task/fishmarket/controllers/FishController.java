@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import technikal.task.fishmarket.models.Fish;
-import technikal.task.fishmarket.models.FishDto;
+import technikal.task.fishmarket.dtos.FishDto;
 import technikal.task.fishmarket.repositories.FishRepository;
 
 import java.io.IOException;

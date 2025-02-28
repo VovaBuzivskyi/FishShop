@@ -1,34 +1,30 @@
 package technikal.task.fishmarket.services;
 
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import technikal.task.fishmarket.models.RoleEntity;
-import technikal.task.fishmarket.models.UserEntity;
-import technikal.task.fishmarket.repositories.UserRepository;
+import technikal.task.fishmarket.models.User;
+import technikal.task.fishmarket.models.UserRole;
 
 @Service
 public class CustomUserDetailService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    public CustomUserDetailService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public CustomUserDetailService(UserService userService) {
+        this.userService = userService;
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserEntity user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Користувача не знайдено: " + username));
+    public UserDetails loadUserByUsername(String username) {
+        User user = userService.getUserByUsername(username);
 
-        return User.builder()
+        return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getUsername())
                 .password(user.getPassword())
-                .roles(user.getRoles().stream()
-                        .map(RoleEntity::getName)
-                        .toArray(String[]::new))
+                .roles(String.valueOf(user.getRoles().stream()
+                        .map(UserRole::getRoleName)
+                        .toList()))
                 .build();
     }
 }
