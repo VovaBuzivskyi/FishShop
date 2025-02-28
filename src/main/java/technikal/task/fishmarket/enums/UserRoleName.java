@@ -1,6 +1,6 @@
 package technikal.task.fishmarket.enums;
 
 public enum UserRoleName {
-    ADMIN,
-    USER
+    ROLE_ADMIN,
+    ROLE_USER
 }

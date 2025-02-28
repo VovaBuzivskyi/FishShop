@@ -9,7 +9,9 @@ import technikal.task.fishmarket.models.UserRole;
 import technikal.task.fishmarket.repositories.RoleRepository;
 import technikal.task.fishmarket.repositories.UserRepository;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Component
@@ -29,24 +31,26 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) {
         if (userRepository.count() == 0) {
             UserRole userRole = new UserRole();
-            userRole.setRoleName(UserRoleName.USER);
-            roleRepository.save(userRole);
+            userRole.setRoleName(UserRoleName.ROLE_USER);
 
             UserRole adminRole = new UserRole();
-            adminRole.setRoleName(UserRoleName.ADMIN);
-            roleRepository.save(adminRole);
+            adminRole.setRoleName(UserRoleName.ROLE_ADMIN);
+
+            List<UserRole> roles = new ArrayList<>(List.of(userRole, adminRole));
+            roleRepository.saveAll(roles);
 
             User user = new User();
             user.setUsername("user");
             user.setPassword(passwordEncoder.encode("user"));
             user.setRoles(new HashSet<>(Set.of(userRole)));
-            userRepository.save(user);
 
             User admin = new User();
             admin.setUsername("admin");
             admin.setPassword(passwordEncoder.encode("admin"));
             admin.setRoles(new HashSet<>(Set.of(adminRole)));
-            userRepository.save(admin);
+
+            List<User> users = new ArrayList<>(List.of(user, admin));
+            userRepository.saveAll(users);
         }
     }
 }

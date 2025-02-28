@@ -25,10 +25,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/", "/register", "/login", "/css/**", "/js/**", "/images/**").permitAll() // Доступ к публичным страницам
-                        .requestMatchers("/fish/create").hasRole("ADMIN")
-                        .requestMatchers("/fish").hasRole("USER")
-                        .anyRequest().authenticated() // Остальные страницы требуют входа
+                        .requestMatchers("/", "/register", "/login").permitAll()
+                        .anyRequest().authenticated()
                 )
                 .csrf(csrf -> csrf.disable()) // Отключаем CSRF (на тестах)
                 .formLogin(login -> login
@@ -37,7 +35,7 @@ public class SecurityConfig {
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/")
+                        .logoutSuccessUrl("/fish")
                         .permitAll()
                 );
 

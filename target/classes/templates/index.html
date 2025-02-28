@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -24,7 +24,8 @@
         }
     </style>
 </head>
-<body><div class="container d-flex justify-content-end my-3">
+<body>
+<div class="container d-flex justify-content-end my-3">
     <div>
         <a class="btn btn-primary me-2" href="/register">Реєстрація</a>
         <a class="btn btn-secondary me-2" href="/login">Увійти</a>
@@ -37,7 +38,7 @@
 <div class="container">
     <h1 class="text-center my-4">Рибка на продаж</h1>
 
-    <a class="btn btn-success" href="/fish/create">Додати рибки</a>
+    <a class="btn btn-success" href="/fish/create" sec:authorize="hasRole('ROLE_ADMIN')">Додати рибки</a>
 
     <table class="table">
         <thead>
@@ -59,18 +60,22 @@
             <td class="text-end">
                 <div class="d-flex align-items-center justify-content-between" style="gap: 20px; width: 100%;">
                     <div class="d-flex justify-content-start" style="gap: 20px; flex-grow: 1;">
-                        <div class="image-container text-center" th:if="${fish.firstImageFileName != null and fish.firstImageFileName != ''}">
+                        <div class="image-container text-center"
+                             th:if="${fish.firstImageFileName != null and fish.firstImageFileName != ''}">
                             <img th:src="@{'/images/'+${fish.firstImageFileName}}" alt="..." width="90">
                         </div>
-                        <div class="image-container text-center" th:if="${fish.secondImageFileName != null and fish.secondImageFileName != ''}">
+                        <div class="image-container text-center"
+                             th:if="${fish.secondImageFileName != null and fish.secondImageFileName != ''}">
                             <img th:src="@{'/images/'+${fish.secondImageFileName}}" alt="..." width="90">
                         </div>
-                        <div class="image-container text-center" th:if="${fish.thirdImageFileName != null and fish.thirdImageFileName != ''}">
+                        <div class="image-container text-center"
+                             th:if="${fish.thirdImageFileName != null and fish.thirdImageFileName != ''}">
                             <img th:src="@{'/images/'+${fish.thirdImageFileName}}" alt="..." width="90">
                         </div>
                     </div>
                     <div>
                         <a class="btn btn-success btn-sm" th:href="@{/fish/delete(id=${fish.id})}"
+                           sec:authorize="hasRole('ROLE_ADMIN')"
                            onclick="return confirm('Ви впевнені?')">Придбати</a>
                     </div>
                 </div>
