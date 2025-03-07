@@ -63,7 +63,7 @@ public class FishService {
 
     public void deleteFish(int id) {
         Fish fish = repo.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Рибку не знайдено"));
+                () -> new EntityNotFoundException("Рибку з ID:%d не знайдено".formatted(id)));
 
         imageService.deleteImages(fish);
         repo.delete(fish);

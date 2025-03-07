@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import technikal.task.fishmarket.dtos.FishDto;
+import technikal.task.fishmarket.exceptions.SavingImageException;
 import technikal.task.fishmarket.models.Fish;
 
 import java.io.IOException;
@@ -51,7 +52,7 @@ public class ImageService {
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException("Error saving images", e);
+            throw new SavingImageException("Error saving images");
         }
 
         return fileNames;
@@ -70,7 +71,7 @@ public class ImageService {
                 Files.delete(imagePath);
                 log.info("Deleted image {}", name);
             } catch (IOException ex) {
-                log.error("Error deleting file {}: {}", name, ex.getMessage());
+                log.error("Error deleting file {}; {}", name, ex.getMessage());
             }
         });
     }
