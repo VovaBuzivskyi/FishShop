@@ -5,11 +5,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import technikal.task.fishmarket.dtos.FishDto;
-import technikal.task.fishmarket.exceptions.SavingImageException;
+import technikal.task.fishmarket.exceptions.ProccessImageException;
 import technikal.task.fishmarket.models.Fish;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -24,6 +23,7 @@ import java.util.stream.Stream;
 public class ImageService {
 
     static final Logger log = LoggerFactory.getLogger(ImageService.class);
+    private static final String UPLOAD_DIR = "public/images/";
 
     public List<String> saveImages(FishDto fishDto, Date catchDate) {
         List<MultipartFile> images = List.of(
@@ -32,9 +32,7 @@ public class ImageService {
                 fishDto.getThirdImageFile()
         );
         List<String> fileNames = new ArrayList<>();
-
-        String uploadDir = "public/images/";
-        Path uploadPath = Paths.get(uploadDir);
+        Path uploadPath = Paths.get(UPLOAD_DIR);
 
         try {
             if (!Files.exists(uploadPath)) {
@@ -44,35 +42,31 @@ public class ImageService {
             for (MultipartFile multipartFile : images) {
                 if (!multipartFile.isEmpty()) {
                     String storageFileName = catchDate.getTime() + "_" + multipartFile.getOriginalFilename();
-                    try (InputStream inputStream = multipartFile.getInputStream()) {
-                        Files.copy(inputStream, Paths.get(uploadDir + storageFileName), StandardCopyOption.REPLACE_EXISTING);
-                        fileNames.add(storageFileName);
-                        log.info("File {} saved", storageFileName);
-                    }
+                    Files.copy(multipartFile.getInputStream(), Paths.get(UPLOAD_DIR + storageFileName), StandardCopyOption.REPLACE_EXISTING);
+                    fileNames.add(storageFileName);
+                    log.info("File {} saved", storageFileName);
                 }
             }
-        } catch (IOException e) {
-            throw new SavingImageException("Error saving images");
-        }
 
+        } catch (IOException e) {
+            log.error("Error saving images", e);
+            throw new ProccessImageException("Під час збереження зображень сталася помилка");
+        }
         return fileNames;
     }
 
     public void deleteImages(Fish fish) {
-        List<String> fileNames = Stream.of(
-                fish.getFirstImageFileName(),
-                fish.getSecondImageFileName(),
-                fish.getThirdImageFileName()
-        ).filter(Objects::nonNull).toList();
-
-        fileNames.forEach(name -> {
-            Path imagePath = Paths.get("public/images/" + name);
-            try {
-                Files.delete(imagePath);
-                log.info("Deleted image {}", name);
-            } catch (IOException ex) {
-                log.error("Error deleting file {}; {}", name, ex.getMessage());
-            }
-        });
+        Stream.of(fish.getFirstImageFileName(), fish.getSecondImageFileName(), fish.getThirdImageFileName())
+                .filter(Objects::nonNull)
+                .forEach(name -> {
+                    Path imagePath = Paths.get(UPLOAD_DIR + name);
+                    try {
+                        Files.delete(imagePath);
+                        log.info("Deleted image: {}", name);
+                    } catch (IOException e) {
+                        log.error("Error delete images", e);
+                        throw new ProccessImageException("Помилка видалення зображення: " + name);
+                    }
+                });
     }
 }

@@ -31,14 +31,13 @@ public class UserService {
     }
 
     public void registerUser(User user) {
-        UserRole role = roleRepository.findByRoleName(UserRoleName.ROLE_USER)
-                .orElseThrow(() -> new EntityNotFoundException("Роль користувача не знайдено"));
+        UserRole userRole = getRoleByName(UserRoleName.ROLE_USER);
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRoles(new HashSet<>(Set.of(role)));
+        user.setRoles(new HashSet<>(Set.of(userRole)));
 
-        User savedUser = userRepository.save(user);
-        log.info("User with id: {} registered", savedUser.getId());
+        userRepository.save(user);
+        log.info("User with id: {} registered", user.getId());
     }
 
     public User getUserByUsername(String username) {
@@ -46,5 +45,12 @@ public class UserService {
                 .orElseThrow(() -> new EntityNotFoundException("Користувача не знайдено: " + username));
         log.info("User with id: {} got from repository", user.getId());
         return user;
+    }
+
+    public UserRole getRoleByName(UserRoleName roleName) {
+        UserRole role = roleRepository.findByRoleName(roleName)
+                .orElseThrow(() -> new EntityNotFoundException("Роль користувача не знайдено: " + roleName.name()));
+        log.info("Role: {} got from repository", role.getRoleName());
+        return role;
     }
 }
