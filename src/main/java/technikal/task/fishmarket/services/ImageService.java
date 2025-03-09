@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 public class ImageService {
 
     static final Logger log = LoggerFactory.getLogger(ImageService.class);
-    private static final String UPLOAD_DIR = "public/images/";
+    static final String UPLOAD_DIR = "public/images/";
 
     public List<String> saveImages(FishDto fishDto, Date catchDate) {
         List<MultipartFile> images = List.of(

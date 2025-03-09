@@ -17,16 +17,16 @@ public class FishService {
 
     private static final Logger log = LoggerFactory.getLogger(FishService.class);
 
-    private final FishRepository repo;
+    private final FishRepository fishRepository;
     private final ImageService imageService;
 
-    public FishService(FishRepository repo, ImageService imageService) {
-        this.repo = repo;
+    public FishService(FishRepository fishRepository, ImageService imageService) {
+        this.fishRepository = fishRepository;
         this.imageService = imageService;
     }
 
     public List<Fish> getAllFishes() {
-        List<Fish> fishlist = repo.findAll(Sort.by(Sort.Direction.DESC, "id"));
+        List<Fish> fishlist = fishRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
         log.info("{} Fishes retrieved from repository", fishlist.size());
         return fishlist;
     }
@@ -57,16 +57,16 @@ public class FishService {
         fish.setCatchDate(catchDate);
         fish.setName(fishDto.getName());
         fish.setPrice(fishDto.getPrice());
-        repo.save(fish);
+        fishRepository.save(fish);
         log.info("Fish with id {} was created", fish.getId());
     }
 
     public void deleteFish(int id) {
-        Fish fish = repo.findById(id).orElseThrow(
+        Fish fish = fishRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Рибку з ID:%d не знайдено".formatted(id)));
 
         imageService.deleteImages(fish);
-        repo.delete(fish);
+        fishRepository.delete(fish);
         log.info("Fish with id {} was deleted", fish.getId());
     }
 }
