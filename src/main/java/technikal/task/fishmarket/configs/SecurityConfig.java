@@ -28,7 +28,6 @@ public class SecurityConfig {
                         .requestMatchers("/", "/register", "/login").permitAll()
                         .anyRequest().authenticated()
                 )
-                .csrf(csrf -> csrf.disable()) // Отключаем CSRF (на тестах)
                 .formLogin(login -> login
                         .defaultSuccessUrl("/fish/", true)
                         .permitAll()

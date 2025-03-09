@@ -2,6 +2,7 @@
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Ошибка</title>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
