@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import technikal.task.fishmarket.dtos.FishDto;
-import technikal.task.fishmarket.exceptions.ProccessImageException;
+import technikal.task.fishmarket.exceptions.ProcessImageException;
 import technikal.task.fishmarket.models.Fish;
 
 import java.io.IOException;
@@ -50,7 +50,7 @@ public class ImageService {
 
         } catch (IOException e) {
             log.error("Error saving images", e);
-            throw new ProccessImageException("Під час збереження зображень сталася помилка");
+            throw new ProcessImageException("Під час збереження зображень сталася помилка");
         }
         return fileNames;
     }
@@ -65,7 +65,7 @@ public class ImageService {
                         log.info("Deleted image: {}", name);
                     } catch (IOException e) {
                         log.error("Error delete images", e);
-                        throw new ProccessImageException("Помилка видалення зображення: " + name);
+                        throw new ProcessImageException("Помилка видалення зображення: " + name);
                     }
                 });
     }

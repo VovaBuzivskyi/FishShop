@@ -8,7 +8,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.multipart.MultipartFile;
 import technikal.task.fishmarket.dtos.FishDto;
-import technikal.task.fishmarket.exceptions.ProccessImageException;
+import technikal.task.fishmarket.exceptions.ProcessImageException;
 import technikal.task.fishmarket.models.Fish;
 
 import java.io.IOException;
@@ -95,7 +95,7 @@ class ImageServiceTest {
         when(firstImage.getOriginalFilename()).thenReturn("fish1.jpg");
         when(firstImage.getInputStream()).thenThrow(IOException.class);
 
-        assertThrows(ProccessImageException.class, () -> imageService.saveImages(fishDto, catchDate));
+        assertThrows(ProcessImageException.class, () -> imageService.saveImages(fishDto, catchDate));
 
         verify(firstImage, times(1)).getInputStream();
     }
@@ -121,7 +121,7 @@ class ImageServiceTest {
         Fish fish = new Fish();
         fish.setFirstImageFileName("fish1.jpg");
 
-        ProccessImageException exception = assertThrows(ProccessImageException.class,
+        ProcessImageException exception = assertThrows(ProcessImageException.class,
                 () -> imageService.deleteImages(fish));
 
         assertTrue(exception.getMessage().contains("Помилка видалення зображення"));

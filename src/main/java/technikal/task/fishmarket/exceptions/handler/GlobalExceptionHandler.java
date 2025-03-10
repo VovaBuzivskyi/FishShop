@@ -7,49 +7,41 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.NoHandlerFoundException;
-import technikal.task.fishmarket.exceptions.ProccessImageException;
+import technikal.task.fishmarket.exceptions.ProcessImageException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-    @ExceptionHandler(EntityNotFoundException.class)
-    public String handleEntityNotFound(EntityNotFoundException ex, Model model) {
-        model.addAttribute("message", ex.getMessage());
-        model.addAttribute("status", 404);
-        log.error(ex.getMessage(), ex);
-        return "error-page";
-    }
-
-    @ExceptionHandler(ProccessImageException.class)
-    public String handleSavingImage(ProccessImageException ex, Model model) {
-        model.addAttribute("message", ex.getMessage());
-        model.addAttribute("status", 500);
-        log.error(ex.getMessage(), ex);
-        return "error-page";
-    }
-
     @ExceptionHandler(IllegalArgumentException.class)
     public String handleIllegalArgument(IllegalArgumentException ex, Model model) {
-        model.addAttribute("message", ex.getMessage());
-        model.addAttribute("status", 400);
-        log.error(ex.getMessage(), ex);
-        return "error-page";
+        return buildResponse(400, ex.getMessage(), ex, model);
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public String handleEntityNotFound(EntityNotFoundException ex, Model model) {
+        return buildResponse(404, ex.getMessage(), ex, model);
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)
     public String handleNotFound(Exception ex, Model model) {
-        model.addAttribute("message", "Сторінку не знайдено");
-        model.addAttribute("status", 404);
-        log.error(ex.getMessage(), ex);
-        return "error-page";
+        return buildResponse(404, "Сторінку не знайдено", ex, model);
+    }
+
+    @ExceptionHandler(ProcessImageException.class)
+    public String handleProcessImage(ProcessImageException ex, Model model) {
+        return buildResponse(500, ex.getMessage(), ex, model);
     }
 
     @ExceptionHandler(Exception.class)
     public String handleGeneralException(Exception ex, Model model) {
-        model.addAttribute("message", "Сталася помилка: " + ex.getMessage());
-        model.addAttribute("status", 500);
+        return buildResponse(500, "На серверi cталася помилка", ex, model);
+    }
+
+    private String buildResponse(int status, String message, Exception ex, Model model) {
+        model.addAttribute("message", message);
+        model.addAttribute("status", status);
         log.error(ex.getMessage(), ex);
         return "error-page";
     }
