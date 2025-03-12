@@ -42,7 +42,7 @@ public class ImageService {
             for (MultipartFile multipartFile : images) {
                 if (!multipartFile.isEmpty()) {
                     String storageFileName = catchDate.getTime() + "_" + multipartFile.getOriginalFilename();
-                    Files.copy(multipartFile.getInputStream(), Paths.get(UPLOAD_DIR + storageFileName), StandardCopyOption.REPLACE_EXISTING);
+                    Files.copy(multipartFile.getInputStream(), Paths.get(UPLOAD_DIR).resolve(storageFileName), StandardCopyOption.REPLACE_EXISTING);
                     fileNames.add(storageFileName);
                     log.info("File {} saved", storageFileName);
                 }
