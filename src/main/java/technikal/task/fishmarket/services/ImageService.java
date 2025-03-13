@@ -16,8 +16,6 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Stream;
 
 @Service
 public class ImageService {
@@ -26,11 +24,7 @@ public class ImageService {
     static final String UPLOAD_DIR = "public/images/";
 
     public List<String> saveImages(FishDto fishDto, Date catchDate) {
-        List<MultipartFile> images = List.of(
-                fishDto.getFirstImageFile(),
-                fishDto.getSecondImageFile(),
-                fishDto.getThirdImageFile()
-        );
+        List<MultipartFile> images = fishDto.getImageFiles();
         List<String> fileNames = new ArrayList<>();
         Path uploadPath = Paths.get(UPLOAD_DIR);
 
@@ -38,12 +32,13 @@ public class ImageService {
             if (!Files.exists(uploadPath)) {
                 Files.createDirectories(uploadPath);
             }
-
+                int counter = 0;
             for (MultipartFile multipartFile : images) {
                 if (!multipartFile.isEmpty()) {
-                    String storageFileName = catchDate.getTime() + "_" + multipartFile.getOriginalFilename();
+                    String storageFileName = catchDate.getTime() + "_" + multipartFile.getOriginalFilename() + counter;
                     Files.copy(multipartFile.getInputStream(), Paths.get(UPLOAD_DIR).resolve(storageFileName), StandardCopyOption.REPLACE_EXISTING);
                     fileNames.add(storageFileName);
+                    counter++;
                     log.info("File {} saved", storageFileName);
                 }
             }
@@ -56,17 +51,15 @@ public class ImageService {
     }
 
     public void deleteImages(Fish fish) {
-        Stream.of(fish.getFirstImageFileName(), fish.getSecondImageFileName(), fish.getThirdImageFileName())
-                .filter(Objects::nonNull)
-                .forEach(name -> {
-                    Path imagePath = Paths.get(UPLOAD_DIR + name);
-                    try {
-                        Files.delete(imagePath);
-                        log.info("Deleted image: {}", name);
-                    } catch (IOException e) {
-                        log.error("Error delete images", e);
-                        throw new ProcessImageException("Помилка видалення зображення: " + name);
-                    }
-                });
+        fish.getImageFileNames().forEach(name -> {
+            Path imagePath = Paths.get(UPLOAD_DIR + name);
+            try {
+                Files.delete(imagePath);
+                log.info("Deleted image: {}", name);
+            } catch (IOException e) {
+                log.error("Error delete images", e);
+                throw new ProcessImageException("Помилка видалення зображення: " + name);
+            }
+        });
     }
 }

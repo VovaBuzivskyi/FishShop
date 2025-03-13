@@ -32,31 +32,19 @@ public class FishService {
     }
 
     public void saveFish(FishDto fishDto) {
-        if (fishDto.getFirstImageFile().isEmpty()) {
+        if (fishDto.getImageFiles().isEmpty()) {
             throw new IllegalArgumentException("Потрібне фото рибки");
         }
 
-        Fish fish = new Fish();
         Date catchDate = new Date();
-
         List<String> fileNames = imageService.saveImages(fishDto, catchDate);
 
-        switch (fileNames.size()) {
-            case 1 -> fish.setFirstImageFileName(fileNames.get(0));
-            case 2 -> {
-                fish.setFirstImageFileName(fileNames.get(0));
-                fish.setSecondImageFileName(fileNames.get(1));
-            }
-            case 3 -> {
-                fish.setFirstImageFileName(fileNames.get(0));
-                fish.setSecondImageFileName(fileNames.get(1));
-                fish.setThirdImageFileName(fileNames.get(2));
-            }
-        }
-
+        Fish fish = new Fish();
+        fish.setImageFileNames(fileNames);
         fish.setCatchDate(catchDate);
         fish.setName(fishDto.getName());
         fish.setPrice(fishDto.getPrice());
+
         fishRepository.save(fish);
         log.info("Fish with id {} was created", fish.getId());
     }

@@ -1,6 +1,7 @@
 package technikal.task.fishmarket.models;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "fish")
@@ -25,39 +27,16 @@ public class Fish {
     @Column(name = "catch_date", nullable = false)
     private Date catchDate;
 
-    @Column(name = "image_file_name", nullable = false)
-    private String firstImageFileName;
+    @ElementCollection
+    private List<String> imageFileNames;
 
-    @Column(name = "second_image_file_name")
-    private String secondImageFileName;
-
-    @Column(name = "third_image_file_name")
-    private String thirdImageFileName;
-
-    public String getFirstImageFileName() {
-        return firstImageFileName;
+    public List<String> getImageFileNames() {
+        return imageFileNames;
     }
 
-    public void setFirstImageFileName(String imageFileName) {
-        this.firstImageFileName = imageFileName;
+    public void setImageFileNames(List<String> imageFileNames) {
+        this.imageFileNames = imageFileNames;
     }
-
-    public String getSecondImageFileName() {
-        return secondImageFileName;
-    }
-
-    public void setSecondImageFileName(String secondImageFileName) {
-        this.secondImageFileName = secondImageFileName;
-    }
-
-    public String getThirdImageFileName() {
-        return thirdImageFileName;
-    }
-
-    public void setThirdImageFileName(String thirdImageFileName) {
-        this.thirdImageFileName = thirdImageFileName;
-    }
-
     public int getId() {
         return id;
     }

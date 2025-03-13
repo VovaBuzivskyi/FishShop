@@ -4,6 +4,8 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 public class FishDto {
 
     @NotEmpty(message = "потрібна назва рибки")
@@ -11,32 +13,14 @@ public class FishDto {
 
     @Min(value = 0, message = "цiна повинна бути позитивною")
     private double price;
-    private MultipartFile firstImageFile;
-    private MultipartFile secondImageFile;
-    private MultipartFile thirdImageFile;
+    private List<MultipartFile> imageFiles;
 
-    public MultipartFile getThirdImageFile() {
-        return thirdImageFile;
+    public List<MultipartFile> getImageFiles() {
+        return imageFiles;
     }
 
-    public void setThirdImageFile(MultipartFile thirdImageFile) {
-        this.thirdImageFile = thirdImageFile;
-    }
-
-    public MultipartFile getSecondImageFile() {
-        return secondImageFile;
-    }
-
-    public void setSecondImageFile(MultipartFile secondImageFile) {
-        this.secondImageFile = secondImageFile;
-    }
-
-    public MultipartFile getFirstImageFile() {
-        return firstImageFile;
-    }
-
-    public void setFirstImageFile(MultipartFile firstImageFile) {
-        this.firstImageFile = firstImageFile;
+    public void setImageFiles(List<MultipartFile> imageFiles) {
+        this.imageFiles = imageFiles;
     }
 
     public String getName() {

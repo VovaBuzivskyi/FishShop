@@ -1,82 +1,105 @@
-    <!doctype html>
-    <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
-        <title>Best fish</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-              integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    </head>
-    <body>
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Best fish</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+<body>
 
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8 mx-auto rounded border p-4 m-4">
-                <h2 class="text-center mb-5">Нова рибка</h2>
-                <form method="post" enctype="multipart/form-data" th:object="${fishDto}">
-                    <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 mx-auto rounded border p-4 m-4">
+            <h2 class="text-center mb-5">Нова рибка</h2>
+            <form method="post" enctype="multipart/form-data" th:object="${fishDto}">
+                <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
 
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label">Назва</label>
+                    <div class="col-sm-8">
+                        <input class="form-control" th:field="*{name}">
+                        <p th:if="${#fields.hasErrors('name')}" th:errorclass="text-danger" th:errors="*{name}"></p>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label">Ціна, ₴</label>
+                    <div class="col-sm-8">
+                        <input class="form-control" type="number" step="0.01" min="0" th:field="*{price}">
+                        <p th:if="${#fields.hasErrors('price')}" th:errorclass="text-danger" th:errors="*{price}"></p>
+                    </div>
+                </div>
+
+                <div id="imageFields">
                     <div class="row mb-3">
-                        <label class="col-sm-4 col-form-label">Назва</label>
-                        <div class="col-sm-8">
-                            <input class="form-control" th:field="*{name}">
-                            <p th:if="${#fields.hasErrors('name')}" th:errorclass="text-danger" th:errors="*{name}"></p>
+                        <label class="col-sm-4 col-form-label">Фото</label>
+                        <div class="col-sm-8 d-flex">
+                            <input class="form-control" type="file" name="imageFiles">
+                            <button type="button" class="btn btn-danger ms-2 remove-btn" style="display: none;">✖</button>
                         </div>
                     </div>
+                </div>
+                <button type="button" class="btn btn-success mb-3" id="addImage">Додати ще фото</button>
 
-                    <div class="row mb-3">
-                        <label class="col-sm-4 col-form-label">Ціна, ₴</label>
-                        <div class="col-sm-8">
-                            <input class="form-control" type="number" step="0.01" min="0" th:field="*{price}">
-                            <p th:if="${#fields.hasErrors('price')}" th:errorclass="text-danger" th:errors="*{price}"></p>
-                        </div>
+                <div class="row mb-3">
+                    <div class="offset-sm-4 col-sm-4 d-grid">
+                        <button type="submit" class="btn btn-primary">Створити</button>
                     </div>
-
-                    <div class="row mb-3">
-                        <label class="col-sm-4 col-form-label">Фото 1</label>
-                        <div class="col-sm-8">
-                            <input class="form-control" type="file" th:field="*{firstImageFile}">
-                            <p th:if="${#fields.hasErrors('firstImageFile')}" th:errorclass="text-danger"
-                               th:errors="*{firstImageFile}"></p>
-                        </div>
+                    <div class="col-sm-4 d-grid">
+                        <button type="button" class="btn btn-outline-primary" onclick="window.location.href='/fish'">
+                            Скасувати
+                        </button>
                     </div>
-
-                    <div class="row mb-3">
-                        <label class="col-sm-4 col-form-label">Фото 2</label>
-                        <div class="col-sm-8">
-                            <input class="form-control" type="file" th:field="*{secondImageFile}">
-                            <p th:if="${#fields.hasErrors('secondImageFile')}" th:errorclass="text-danger"
-                               th:errors="*{secondImageFile}"></p>
-                        </div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <label class="col-sm-4 col-form-label">Фото 3</label>
-                        <div class="col-sm-8">
-                            <input class="form-control" type="file" th:field="*{thirdImageFile}">
-                            <p th:if="${#fields.hasErrors('thirdImageFile')}" th:errorclass="text-danger"
-                               th:errors="*{thirdImageFile}"></p>
-                        </div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <div class="offset-sm-4 col-sm-4 d-grid">
-                            <button type="submit" class="btn btn-primary">Створити</button>
-                        </div>
-                        <div class="col-sm-4 d-grid">
-                            <button type="button" class="btn btn-outline-primary" onclick="window.location.href='/fish'">
-                                Скасувати
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-            crossorigin="anonymous"></script>
-    </body>
-    </html>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const maxImages = 10;
+        const imageFields = document.getElementById("imageFields");
+        const addImageBtn = document.getElementById("addImage");
+
+        addImageBtn.addEventListener("click", function () {
+            const totalFields = imageFields.getElementsByClassName("row").length;
+            if (totalFields < maxImages) {
+                const newField = document.createElement("div");
+                newField.classList.add("row", "mb-3");
+                newField.innerHTML = `
+                    <label class="col-sm-4 col-form-label">Фото</label>
+                    <div class="col-sm-8 d-flex">
+                        <input class="form-control" type="file" name="imageFiles" multiple>
+                        <button type="button" class="btn btn-danger ms-2 remove-btn">✖</button>
+                    </div>
+                `;
+                imageFields.appendChild(newField);
+                updateRemoveButtons();
+            }
+        });
+
+        imageFields.addEventListener("click", function (event) {
+            if (event.target.classList.contains("remove-btn")) {
+                event.target.closest(".row").remove();
+                updateRemoveButtons();
+            }
+        });
+
+        function updateRemoveButtons() {
+            const buttons = document.querySelectorAll(".remove-btn");
+            buttons.forEach(btn => btn.style.display = buttons.length > 1 ? "block" : "none");
+        }
+
+        updateRemoveButtons();
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+</html>
