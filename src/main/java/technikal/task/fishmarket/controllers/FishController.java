@@ -45,7 +45,7 @@ public class FishController {
         try {
             fishService.saveFish(fishDto);
         } catch (IllegalArgumentException e) {
-            result.addError(new FieldError("fishDto", "firstImageFile", e.getMessage()));
+            result.addError(new FieldError("fishDto", "imageFiles", e.getMessage()));
             return "createFish";
         }
 

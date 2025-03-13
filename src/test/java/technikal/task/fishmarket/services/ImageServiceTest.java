@@ -1,6 +1,5 @@
 package technikal.task.fishmarket.services;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,6 +15,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -45,25 +45,12 @@ class ImageServiceTest {
     @Mock
     private MultipartFile thirdImage;
 
-    private FishDto fishDto;
     private final Date catchDate = new Date();
-    private String uploadDir;
-
-    @BeforeEach
-    void setUp() {
-        fishDto = new FishDto();
-        fishDto.setFirstImageFile(firstImage);
-        fishDto.setSecondImageFile(secondImage);
-        fishDto.setThirdImageFile(thirdImage);
-
-        uploadDir = "public/images/";
-    }
 
     @Test
     void saveImagesTest() throws IOException {
-        when(firstImage.isEmpty()).thenReturn(false);
-        when(secondImage.isEmpty()).thenReturn(true);
-        when(thirdImage.isEmpty()).thenReturn(false);
+        FishDto fishDto = new FishDto();
+        fishDto.setImageFiles(new ArrayList<>(List.of(firstImage, thirdImage)));
 
         when(firstImage.getOriginalFilename()).thenReturn("fish1.jpg");
         when(thirdImage.getOriginalFilename()).thenReturn("fish3.png");
@@ -73,6 +60,7 @@ class ImageServiceTest {
         when(firstImage.getInputStream()).thenReturn(inputStream1);
         when(thirdImage.getInputStream()).thenReturn(inputStream3);
 
+        String uploadDir = "public/images/";
         Files.createDirectories(Paths.get(uploadDir));
 
         List<String> savedFileNames = imageService.saveImages(fishDto, catchDate);
@@ -85,14 +73,15 @@ class ImageServiceTest {
         verify(thirdImage, times(1)).getInputStream();
         verify(secondImage, never()).getInputStream();
 
-        Files.deleteIfExists(Paths.get(uploadDir + catchDate.getTime() + "_" + "fish1.jpg"));
-        Files.deleteIfExists(Paths.get(uploadDir + catchDate.getTime() + "_" + "fish3.png"));
+        Files.delete(Paths.get(uploadDir + 0 + "_" + catchDate.getTime() + "_" + "fish1.jpg"));
+        Files.delete(Paths.get(uploadDir + 1 + "_" + catchDate.getTime() + "_" + "fish3.png"));
     }
 
     @Test
     void saveImagesThrowsExceptionTest() throws IOException {
-        when(firstImage.isEmpty()).thenReturn(false);
-        when(firstImage.getOriginalFilename()).thenReturn("fish1.jpg");
+        FishDto fishDto = new FishDto();
+        fishDto.setImageFiles(new ArrayList<>(List.of(firstImage)));
+
         when(firstImage.getInputStream()).thenThrow(IOException.class);
 
         assertThrows(ProcessImageException.class, () -> imageService.saveImages(fishDto, catchDate));
@@ -107,9 +96,7 @@ class ImageServiceTest {
         Files.createFile(testFile);
 
         Fish fish = new Fish();
-        fish.setFirstImageFileName("testImage.jpg");
-        fish.setSecondImageFileName(null);
-        fish.setThirdImageFileName(null);
+        fish.setImageFileNames(new ArrayList<>(List.of("testImage.jpg")));
 
         imageService.deleteImages(fish);
 
@@ -119,7 +106,7 @@ class ImageServiceTest {
     @Test
     void deleteImagesThrowsExceptionTest() {
         Fish fish = new Fish();
-        fish.setFirstImageFileName("fish1.jpg");
+        fish.setImageFileNames(new ArrayList<>(List.of("testImage.jpg")));
 
         ProcessImageException exception = assertThrows(ProcessImageException.class,
                 () -> imageService.deleteImages(fish));

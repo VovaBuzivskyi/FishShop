@@ -32,17 +32,24 @@
                         <p th:if="${#fields.hasErrors('price')}" th:errorclass="text-danger" th:errors="*{price}"></p>
                     </div>
                 </div>
+                <div id="priceWarning" class="text-danger mt-2" style="display: none;">
+                    Ціна повинна бути хоча б 0.1 ₴.
+                </div>
 
                 <div id="imageFields">
                     <div class="row mb-3">
                         <label class="col-sm-4 col-form-label">Фото</label>
                         <div class="col-sm-8 d-flex">
                             <input class="form-control" type="file" name="imageFiles">
-                            <button type="button" class="btn btn-danger ms-2 remove-btn" style="display: none;">✖</button>
+                            <button type="button" class="btn btn-danger ms-2 remove-btn" style="display: none;">✖
+                            </button>
                         </div>
                     </div>
                 </div>
                 <button type="button" class="btn btn-success mb-3" id="addImage">Додати ще фото</button>
+                <div id="warningMessage" class="text-danger mt-2" style="display: none;">
+                    Будь ласка, додайте хоча б одне фото.
+                </div>
 
                 <div class="row mb-3">
                     <div class="offset-sm-4 col-sm-4 d-grid">
@@ -64,6 +71,9 @@
         const maxImages = 10;
         const imageFields = document.getElementById("imageFields");
         const addImageBtn = document.getElementById("addImage");
+        const warningMessage = document.getElementById("warningMessage");
+        const priceWarning = document.getElementById("priceWarning");
+        const form = document.querySelector('form');
 
         addImageBtn.addEventListener("click", function () {
             const totalFields = imageFields.getElementsByClassName("row").length;
@@ -71,12 +81,12 @@
                 const newField = document.createElement("div");
                 newField.classList.add("row", "mb-3");
                 newField.innerHTML = `
-                    <label class="col-sm-4 col-form-label">Фото</label>
-                    <div class="col-sm-8 d-flex">
-                        <input class="form-control" type="file" name="imageFiles" multiple>
-                        <button type="button" class="btn btn-danger ms-2 remove-btn">✖</button>
-                    </div>
-                `;
+                <label class="col-sm-4 col-form-label">Фото</label>
+                <div class="col-sm-8 d-flex">
+                    <input class="form-control" type="file" name="imageFiles" multiple>
+                    <button type="button" class="btn btn-danger ms-2 remove-btn">✖</button>
+                </div>
+            `;
                 imageFields.appendChild(newField);
                 updateRemoveButtons();
             }
@@ -93,6 +103,35 @@
             const buttons = document.querySelectorAll(".remove-btn");
             buttons.forEach(btn => btn.style.display = buttons.length > 1 ? "block" : "none");
         }
+
+        form.addEventListener("submit", function (event) {
+            const fileInputs = document.querySelectorAll('input[type="file"][name="imageFiles"]');
+            let hasFile = false;
+
+            fileInputs.forEach(input => {
+                if (input.files.length > 0) {
+                    hasFile = true;
+                }
+            });
+
+            const priceInput = document.querySelector('input[name="price"]');
+            const price = parseFloat(priceInput.value);
+            let priceValid = price >= 0.1;
+
+            if (!hasFile) {
+                event.preventDefault();
+                warningMessage.style.display = 'block';
+            } else {
+                warningMessage.style.display = 'none';
+            }
+
+            if (!priceValid) {
+                event.preventDefault();
+                priceWarning.style.display = 'block';
+            } else {
+                priceWarning.style.display = 'none';
+            }
+        });
 
         updateRemoveButtons();
     });

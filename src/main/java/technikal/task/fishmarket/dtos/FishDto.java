@@ -1,6 +1,5 @@
 package technikal.task.fishmarket.dtos;
 
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -8,11 +7,11 @@ import java.util.List;
 
 public class FishDto {
 
-    @NotEmpty(message = "потрібна назва рибки")
+    @NotEmpty(message = "Потрібна назва рибки")
     private String name;
 
-    @Min(value = 0, message = "цiна повинна бути позитивною")
     private double price;
+
     private List<MultipartFile> imageFiles;
 
     public List<MultipartFile> getImageFiles() {

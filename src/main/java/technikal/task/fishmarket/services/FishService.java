@@ -32,7 +32,7 @@ public class FishService {
     }
 
     public void saveFish(FishDto fishDto) {
-        if (fishDto.getImageFiles().isEmpty()) {
+        if (fishDto.getImageFiles() == null || fishDto.getImageFiles().isEmpty()) {
             throw new IllegalArgumentException("Потрібне фото рибки");
         }
 

@@ -32,10 +32,10 @@ public class ImageService {
             if (!Files.exists(uploadPath)) {
                 Files.createDirectories(uploadPath);
             }
-                int counter = 0;
+            int counter = 0;
             for (MultipartFile multipartFile : images) {
                 if (!multipartFile.isEmpty()) {
-                    String storageFileName = catchDate.getTime() + "_" + multipartFile.getOriginalFilename() + counter;
+                    String storageFileName = counter + "_" + catchDate.getTime() + "_" + multipartFile.getOriginalFilename();
                     Files.copy(multipartFile.getInputStream(), Paths.get(UPLOAD_DIR).resolve(storageFileName), StandardCopyOption.REPLACE_EXISTING);
                     fileNames.add(storageFileName);
                     counter++;
@@ -57,7 +57,6 @@ public class ImageService {
                 Files.delete(imagePath);
                 log.info("Deleted image: {}", name);
             } catch (IOException e) {
-                log.error("Error delete images", e);
                 throw new ProcessImageException("Помилка видалення зображення: " + name);
             }
         });

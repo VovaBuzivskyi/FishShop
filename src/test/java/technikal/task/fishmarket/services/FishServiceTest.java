@@ -55,7 +55,7 @@ class FishServiceTest {
         FishDto fishDto = new FishDto();
         fishDto.setName("Salmon");
         fishDto.setPrice(100.0);
-        fishDto.setFirstImageFile(mock(MultipartFile.class));
+        fishDto.setImageFiles(new ArrayList<>(List.of(mock(MultipartFile.class))));
 
         List<String> fileNames = List.of("image1.jpg", "image2.jpg");
         when(imageService.saveImages(any(FishDto.class), any(Date.class))).thenReturn(fileNames);
@@ -70,9 +70,7 @@ class FishServiceTest {
         FishDto fishDto = new FishDto();
         fishDto.setName("Salmon");
         fishDto.setPrice(100.0);
-        fishDto.setFirstImageFile(mock(MultipartFile.class));
-
-        when(fishDto.getFirstImageFile().isEmpty()).thenReturn(true);
+        fishDto.setImageFiles(new ArrayList<>());
 
         assertThrows(IllegalArgumentException.class, () -> fishService.saveFish(fishDto));
     }
