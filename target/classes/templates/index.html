@@ -63,16 +63,9 @@
                 <div class="d-flex align-items-center justify-content-between" style="gap: 20px; width: 100%;">
                     <div class="d-flex justify-content-start" style="gap: 20px; flex-grow: 1;">
                         <div class="image-container text-center"
-                             th:if="${fish.firstImageFileName != null and fish.firstImageFileName != ''}">
-                            <img th:src="@{'/images/'+${fish.firstImageFileName}}" alt="..." width="90">
-                        </div>
-                        <div class="image-container text-center"
-                             th:if="${fish.secondImageFileName != null and fish.secondImageFileName != ''}">
-                            <img th:src="@{'/images/'+${fish.secondImageFileName}}" alt="..." width="90">
-                        </div>
-                        <div class="image-container text-center"
-                             th:if="${fish.thirdImageFileName != null and fish.thirdImageFileName != ''}">
-                            <img th:src="@{'/images/'+${fish.thirdImageFileName}}" alt="..." width="90">
+                             th:each="imageFileName : ${fish.imageFileNames}"
+                             th:if="${imageFileName != null and imageFileName != ''}">
+                            <img th:src="@{'/images/' + ${imageFileName}}" alt="Фото рибки" width="90">
                         </div>
                     </div>
                     <div>

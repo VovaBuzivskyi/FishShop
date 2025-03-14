@@ -21,7 +21,7 @@ import java.util.List;
 public class ImageService {
 
     static final Logger log = LoggerFactory.getLogger(ImageService.class);
-    static final String UPLOAD_DIR = "public/images/";
+    static final String UPLOAD_DIR = System.getProperty("user.dir") + "/uploads/images/";
 
     public List<String> saveImages(FishDto fishDto, Date catchDate) {
         List<MultipartFile> images = fishDto.getImageFiles();
